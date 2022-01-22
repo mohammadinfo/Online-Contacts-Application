@@ -11,6 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'دفترچه تلفن آنلاین',
       theme: ThemeData(fontFamily: 'iransans'),
       debugShowCheckedModeBanner: false,
       home: HomeScreen(),

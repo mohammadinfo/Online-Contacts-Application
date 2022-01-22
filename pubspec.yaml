@@ -31,6 +31,8 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^0.13.4
+  connectivity_plus: ^2.2.0
+  cool_alert: ^1.1.0
 
 dev_dependencies:
 

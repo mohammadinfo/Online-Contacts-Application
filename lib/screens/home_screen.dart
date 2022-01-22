@@ -16,7 +16,6 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isLoading = false;
   //
   List<Contact> contacts = [];
-
   //
   Future<void> getData() async {
     setState(() {
