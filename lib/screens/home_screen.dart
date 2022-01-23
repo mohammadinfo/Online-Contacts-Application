@@ -1,4 +1,5 @@
 // ignore_for_file: must_be_immutable
+import 'package:contacts_app/main.dart';
 import 'package:contacts_app/models/contact.dart';
 import 'package:contacts_app/screens/add_edit_screen.dart';
 import 'package:flutter/material.dart';
@@ -52,13 +53,17 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  //
   @override
   void initState() {
-    getData();
+    MyApp.checkInternet().then((value) {
+      if (value) {
+        getData();
+      }
+    });
     super.initState();
   }
 
-  //
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,7 +90,15 @@ class _HomeScreenState extends State<HomeScreen> {
         leading: Icon(Icons.import_contacts_sharp),
         actions: [
           IconButton(
-            onPressed: getData,
+            onPressed: () {
+              MyApp.checkInternet().then((value) {
+                if (value) {
+                  getData();
+                } else {
+                  MyApp.showInternetError(context);
+                }
+              });
+            },
             icon: Icon(Icons.refresh),
           ),
         ],

@@ -1,10 +1,10 @@
 // ignore_for_file: unused_field
 import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:contacts_app/main.dart';
 import 'package:contacts_app/models/contact.dart';
 import 'package:contacts_app/widgets/MyButton.dart';
 import 'package:contacts_app/widgets/MyTextField.dart';
-import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -22,11 +22,8 @@ class AddEditScreen extends StatefulWidget {
 class _AddEditScreenState extends State<AddEditScreen> {
   //
   bool isLoading = false;
-  bool isConnected = false;
-  final _formKey = GlobalKey<FormState>();
   //
-  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
-  final Connectivity _connectivity = Connectivity();
+  final _formKey = GlobalKey<FormState>();
   //
   Future<void> postData() async {
     setState(() {
@@ -63,36 +60,6 @@ class _AddEditScreenState extends State<AddEditScreen> {
     http.put(url, body: contact.toJson()).then((response) {
       print(response.body);
     });
-  }
-
-  void showErrorDialog() {
-    CoolAlert.show(
-      width: 100,
-      context: context,
-      type: CoolAlertType.error,
-      title: 'خطا',
-      confirmBtnText: 'باشه',
-      confirmBtnTextStyle: TextStyle(fontSize: 16, color: Colors.white),
-      confirmBtnColor: Colors.redAccent,
-      text: "!شما به اینترنت متصل نیستید",
-    );
-  }
-
-  @override
-  void initState() {
-    _connectivitySubscription =
-        _connectivity.onConnectivityChanged.listen((ConnectivityResult status) {
-      //
-      if (status == ConnectivityResult.wifi ||
-          status == ConnectivityResult.mobile) {
-        isConnected = true;
-      } else {
-        isConnected = false;
-        showErrorDialog();
-      }
-      //
-    });
-    super.initState();
   }
 
   @override
@@ -141,19 +108,21 @@ class _AddEditScreenState extends State<AddEditScreen> {
                       ),
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    if (isConnected) {
-                      // POST
-                      if (AddEditScreen.id == 0) {
-                        postData();
+                    MyApp.checkInternet().then((value) {
+                      if (value) {
+                        // POST
+                        if (AddEditScreen.id == 0) {
+                          postData();
+                        }
+                        // PUT
+                        else {
+                          putData();
+                          Navigator.pop(context);
+                        }
+                      } else {
+                        MyApp.showInternetError(context);
                       }
-                      // PUT
-                      else {
-                        putData();
-                        Navigator.pop(context);
-                      }
-                    } else {
-                      showErrorDialog();
-                    }
+                    });
                   }
                 },
               ),
