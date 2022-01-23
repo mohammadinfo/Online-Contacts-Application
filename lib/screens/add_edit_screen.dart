@@ -108,21 +108,23 @@ class _AddEditScreenState extends State<AddEditScreen> {
                       ),
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    MyApp.checkInternet().then((value) {
-                      if (value) {
-                        // POST
-                        if (AddEditScreen.id == 0) {
-                          postData();
+                    MyApp.checkInternet().then(
+                      (value) {
+                        if (value) {
+                          // POST
+                          if (AddEditScreen.id == 0) {
+                            postData();
+                          }
+                          // PUT
+                          else {
+                            putData();
+                            Navigator.pop(context);
+                          }
+                        } else {
+                          MyApp.showInternetError(context);
                         }
-                        // PUT
-                        else {
-                          putData();
-                          Navigator.pop(context);
-                        }
-                      } else {
-                        MyApp.showInternetError(context);
-                      }
-                    });
+                      },
+                    );
                   }
                 },
               ),
